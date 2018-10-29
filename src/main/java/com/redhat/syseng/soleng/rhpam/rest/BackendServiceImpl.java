@@ -76,23 +76,32 @@ public class BackendServiceImpl {
 
                 System.out.println("!!!!!!!!!!!!!! found svg file");
                 System.out.println("jarEntry.getName(): " + jarEntry.getName());
-                InputStream inputStream = jarFile.getInputStream(jarEntry);
-
-                Scanner s = new Scanner(inputStream).useDelimiter("\\A");
-                String tmpSvg = s.hasNext() ? s.next() : "";
-
+ 
                 String tmpStr = info.getProcessId();
 
-                String tmpNameV1 = tmpStr;
+                /*
+                String tmpNameV1 = tmpStr;                
                 int i = tmpStr.indexOf(".");
                 if (i > -1) {
                     tmpNameV1 = tmpStr.substring(tmpStr.indexOf("."));
                 }
-                if (jarEntry.getName().contains(tmpNameV1)) {
-                    info.setSvgFile(tmpSvg);
-                }
+                if (jarEntry.getName().contains(tmpNameV1)) {                
+                */
+                if (jarEntry.getName().contains(tmpStr)) {
+                    InputStream inputStream = jarFile.getInputStream(jarEntry);
 
-                inputStream.close();
+                    Scanner s = new Scanner(inputStream).useDelimiter("\\A");
+                    String tmpSvg = s.hasNext() ? s.next() : "";
+                    //Add this replacement here because in react-svgmt, ? and = are not allowed. 
+                    tmpSvg = tmpSvg.replaceAll("\\?shapeType=BACKGROUND", "_shapeType_BACKGROUND");
+
+                    inputStream.close();                    
+                    
+                    info.setSvgFile(tmpSvg);
+                }                
+                
+                
+
             }
         }
         jarFile.close();
@@ -114,8 +123,6 @@ public class BackendServiceImpl {
         }
         info.setValues(values);
         info.setLabels(labels);
-        System.out.println("######################################fromBpmNodesToStrings " + info.getValues().toString());
-        System.out.println("######################################fromBpmNodesToStrings " + info.getLabels().toString());
 
     }
     
