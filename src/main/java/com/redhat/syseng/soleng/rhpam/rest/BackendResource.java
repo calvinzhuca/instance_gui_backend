@@ -1,6 +1,5 @@
 package com.redhat.syseng.soleng.rhpam.rest;
 
-
 import java.io.IOException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -19,17 +18,20 @@ public class BackendResource {
 
     @GET
     public Response get(@QueryParam("processId") String processId, @QueryParam("groupId") String groupId, @QueryParam("artifactId") String artifactId, @QueryParam("version") String version) throws IOException {
-        System.out.println("!!!!!!!!!!!!!!!! get" + groupId);
-        String result = BackendServiceImpl.getInfoFromKjar(processId, groupId, artifactId, version);
+        String result = BackendServiceImpl.getInfoJsonFromKjar(processId, groupId, artifactId, version);
         return Response.ok(result).build();
     }
 
     @GET
-    @Path("/products/{sku}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public void getTest(@PathParam("sku") Long sku) {
-        System.out.println("!!!!!!!!!!!!!!!! getTest" + sku);
-
+    @Path("/both")
+    public Response getBoth(
+            @QueryParam("sourceProcessId") String sourceProcessId, @QueryParam("sourceGroupId") String sourceGroupId, @QueryParam("sourceArtifactId") String sourceArtifactId, @QueryParam("sourceVersion") String sourceVersion,
+            @QueryParam("targetProcessId") String targetProcessId, @QueryParam("targetGroupId") String targetGroupId, @QueryParam("targetArtifactId") String targetArtifactId, @QueryParam("targetVersion") String targetVersion
+    ) throws IOException {
+        String result = BackendServiceImpl.getBothInfoJsonFromKjar(sourceProcessId, sourceGroupId, sourceArtifactId, sourceVersion,
+                targetProcessId, targetGroupId, targetArtifactId, targetVersion
+        );
+        return Response.ok(result).build();
     }
 
 }

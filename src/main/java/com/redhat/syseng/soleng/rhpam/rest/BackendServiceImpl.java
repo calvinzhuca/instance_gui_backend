@@ -2,7 +2,9 @@ package com.redhat.syseng.soleng.rhpam.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import java.io.File;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,7 +14,6 @@ import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-//import org.apache.commons.io.IOUtils;
 import org.eclipse.aether.artifact.Artifact;
 import org.kie.api.KieServices;
 import org.kie.api.management.GAV;
@@ -24,18 +25,45 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.JDOMException;
 
+/*
+import org.apache.batik.util.XMLResourceDescriptor;
+import org.apache.batik.bridge.DocumentLoader;
+import org.apache.batik.bridge.GVTBuilder;
+import org.apache.batik.bridge.UserAgent;
+import org.apache.batik.bridge.UserAgentAdapter;
+import org.apache.batik.gvt.GraphicsNode;
+import org.apache.batik.bridge.BridgeContext;
+*/
 public class BackendServiceImpl {
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public static String getInfoFromKjar(String processId, String groupId, String artifactId, String version) throws IOException {
-        System.out.println("!!!!!!!!!!!!! getInfoFromKjar version" + version);
+    public static String getInfoJsonFromKjar(String processId, String groupId, String artifactId, String version) throws IOException {
+        ProcessInfo info = getInfoFromKjar(processId, groupId, artifactId, version);
+
+        return gson.toJson(info);
+    }
+
+
+    public static String getBothInfoJsonFromKjar(String sourceProcessId, String sourceGroupId, String sourceArtifactId, String sourceVersion, String targetProcessId, String targetGroupId, String targetArtifactId, String targetVersion) throws IOException {
+        ProcessInfos bothInfo = new ProcessInfos();
+
+        ProcessInfo sourceInfo = getInfoFromKjar(sourceProcessId, sourceGroupId, sourceArtifactId, sourceVersion);
+        ProcessInfo targetInfo = getInfoFromKjar(targetProcessId, targetGroupId, targetArtifactId, targetVersion);
+
+        bothInfo.setSourceInfo(sourceInfo);
+        bothInfo.setTargetInfo(targetInfo);
+
+        return gson.toJson(bothInfo);
+    }
+    
+
+    public static ProcessInfo getInfoFromKjar(String processId, String groupId, String artifactId, String version) throws IOException {
         ProcessInfo info = new ProcessInfo();
         info.setProcessId(processId);
+        info.setContainerId(artifactId + "_" + version);
         retriveProcessInfoFromKjar(groupId, artifactId, version, info);
-        //Gson gson = new Gson();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String jsonInString = gson.toJson(info);
-        return jsonInString;
-    }
+        return info;
+    }    
 
     public static void retriveProcessInfoFromKjar(String groupId, String artifactId, String version, ProcessInfo info) throws IOException {
         //System.out.println("######################################retriveProcessInfoFromKjar started, isV1 " + isV1);
@@ -46,12 +74,7 @@ public class BackendServiceImpl {
         KieMavenRepository repository = KieMavenRepository.getKieMavenRepository();
 
         Artifact artifact = repository.resolveArtifact(gav);
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!artifact.getVersion() " + artifact.getVersion());
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!artifact.getArtifactId() " + artifact.getArtifactId());
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!artifact.getGroupId() " + artifact.getGroupId());
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!artifact " + artifact);
         File kjarFile = artifact.getFile();
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!kjarFile.getName() " + kjarFile.getName());
         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!kjarFile.getPath() " + kjarFile.getPath());
 
         JarFile jarFile = new JarFile(kjarFile);
@@ -61,8 +84,8 @@ public class BackendServiceImpl {
             //System.out.println("------------jarEntry.getName(): " + jarEntry.getName());
 
             if (jarEntry.getName().contains("bpmn")) {
-                System.out.println("!!!!!!!!!!!!!! found bpmn file");
-                System.out.println("jarEntry.getName(): " + jarEntry.getName());
+                //System.out.println("!!!!!!!!!!!!!! found bpmn file");
+                //System.out.println("jarEntry.getName(): " + jarEntry.getName());
 
                 // get the input stream
                 InputStream inputStream = jarFile.getInputStream(jarEntry);
@@ -74,9 +97,8 @@ public class BackendServiceImpl {
             } else if (jarEntry.getName().contains("svg")) {
                 //This is the process diagram file
 
-                System.out.println("!!!!!!!!!!!!!! found svg file");
-                System.out.println("jarEntry.getName(): " + jarEntry.getName());
- 
+                //System.out.println("!!!!!!!!!!!!!! found svg file");
+                //System.out.println("jarEntry.getName(): " + jarEntry.getName());
                 String tmpStr = info.getProcessId();
 
                 /*
@@ -86,21 +108,19 @@ public class BackendServiceImpl {
                     tmpNameV1 = tmpStr.substring(tmpStr.indexOf("."));
                 }
                 if (jarEntry.getName().contains(tmpNameV1)) {                
-                */
+                 */
                 if (jarEntry.getName().contains(tmpStr)) {
                     InputStream inputStream = jarFile.getInputStream(jarEntry);
-
+                //testSvgSize(inputStream);
                     Scanner s = new Scanner(inputStream).useDelimiter("\\A");
                     String tmpSvg = s.hasNext() ? s.next() : "";
                     //Add this replacement here because in react-svgmt, ? and = are not allowed. 
                     tmpSvg = tmpSvg.replaceAll("\\?shapeType=BACKGROUND", "_shapeType_BACKGROUND");
 
-                    inputStream.close();                    
-                    
+                    inputStream.close();
+
                     info.setSvgFile(tmpSvg);
-                }                
-                
-                
+                }
 
             }
         }
@@ -110,22 +130,23 @@ public class BackendServiceImpl {
         //return info;
     }
 
-    private static void fromBpmNodesToStrings (ProcessInfo info){
+    private static void fromBpmNodesToStrings(ProcessInfo info) {
 
         ArrayList<BpmNode> nodes = info.getNodes();
         ArrayList<String> values = new ArrayList();
         ArrayList<String> labels = new ArrayList();
-        for (BpmNode node: nodes){
-            if (node.getType().equals("userTask")){
+        for (BpmNode node : nodes) {
+            if (node.getType().equals("userTask")) {
                 values.add(node.getId());
-                labels.add(node.getName()+ ":" + node.getId());
+                labels.add(node.getName() + ":" + node.getId());
             }
         }
+        
         info.setValues(values);
         info.setLabels(labels);
 
     }
-    
+
     private static ArrayList<BpmNode> parseBpmnFile(InputStream inputStream) {
 
         SAXBuilder saxBuilder = new SAXBuilder();
@@ -158,4 +179,31 @@ public class BackendServiceImpl {
         }
         return result;
     }
+    
+    /*
+    this didn't wokr, always the the max number from svg, which is width 2801.0 height 1401.0
+     private static void testSvgSize(InputStream is) throws FileNotFoundException, IOException {
+        org.apache.batik.anim.dom.SAXSVGDocumentFactory factory = new org.apache.batik.anim.dom.SAXSVGDocumentFactory(
+                XMLResourceDescriptor.getXMLParserClassName());
+
+
+        org.w3c.dom.Document document = factory.createDocument(
+                "", is);
+        UserAgent agent = new UserAgentAdapter();
+        DocumentLoader loader = new DocumentLoader(agent);
+        BridgeContext context = new BridgeContext(agent, loader);
+        context.setDynamic(true);
+        GVTBuilder builder = new GVTBuilder();
+        GraphicsNode root = builder.build(context, document);
+
+        System.out.println("getGeometryBounds width " + root.getGeometryBounds().getWidth());
+        System.out.println("getGeometryBounds height " + root.getGeometryBounds().getHeight());
+        System.out.println("getSensitiveBounds width " + root.getSensitiveBounds().getWidth());
+        System.out.println("getSensitiveBounds height " + root.getSensitiveBounds().getHeight());        
+        System.out.println("getBounds width " + root.getBounds().getWidth());
+        System.out.println("getBounds height " + root.getBounds().getHeight());    
+
+
+     }*/
+    
 }
