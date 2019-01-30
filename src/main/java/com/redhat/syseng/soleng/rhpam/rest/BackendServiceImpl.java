@@ -3,16 +3,24 @@ package com.redhat.syseng.soleng.rhpam.rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import com.redhat.syseng.soleng.rhpam.model.ProcessInfos;
+import com.redhat.syseng.soleng.rhpam.model.ProcessInfo;
+import com.redhat.syseng.soleng.rhpam.model.ProcessInstanceList;
+import com.redhat.syseng.soleng.rhpam.model.ProcessInstanceList.ProcessInstance;
+import com.redhat.syseng.soleng.rhpam.model.RunningInstance;
+
 import java.io.File;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 
 import org.eclipse.aether.artifact.Artifact;
 import org.kie.api.KieServices;
@@ -25,6 +33,8 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.JDOMException;
 
+
+
 /*
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.apache.batik.bridge.DocumentLoader;
@@ -33,16 +43,19 @@ import org.apache.batik.bridge.UserAgent;
 import org.apache.batik.bridge.UserAgentAdapter;
 import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.bridge.BridgeContext;
-*/
+ */
 public class BackendServiceImpl {
+
+    private static Logger logger = Logger.getLogger(BackendServiceImpl.class.getName());
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+
 
     public static String getInfoJsonFromKjar(String processId, String groupId, String artifactId, String version) throws IOException {
         ProcessInfo info = getInfoFromKjar(processId, groupId, artifactId, version);
 
         return gson.toJson(info);
     }
-
 
     public static String getBothInfoJsonFromKjar(String sourceProcessId, String sourceGroupId, String sourceArtifactId, String sourceVersion, String targetProcessId, String targetGroupId, String targetArtifactId, String targetVersion) throws IOException {
         ProcessInfos bothInfo = new ProcessInfos();
@@ -55,7 +68,6 @@ public class BackendServiceImpl {
 
         return gson.toJson(bothInfo);
     }
-    
 
     public static ProcessInfo getInfoFromKjar(String processId, String groupId, String artifactId, String version) throws IOException {
         ProcessInfo info = new ProcessInfo();
@@ -63,7 +75,7 @@ public class BackendServiceImpl {
         info.setContainerId(artifactId + "_" + version);
         retriveProcessInfoFromKjar(groupId, artifactId, version, info);
         return info;
-    }    
+    }
 
     public static void retriveProcessInfoFromKjar(String groupId, String artifactId, String version, ProcessInfo info) throws IOException {
         //System.out.println("######################################retriveProcessInfoFromKjar started, isV1 " + isV1);
@@ -111,7 +123,7 @@ public class BackendServiceImpl {
                  */
                 if (jarEntry.getName().contains(tmpStr)) {
                     InputStream inputStream = jarFile.getInputStream(jarEntry);
-                //testSvgSize(inputStream);
+                    //testSvgSize(inputStream);
                     Scanner s = new Scanner(inputStream).useDelimiter("\\A");
                     String tmpSvg = s.hasNext() ? s.next() : "";
                     //Add this replacement here because in react-svgmt, ? and = are not allowed. 
@@ -141,7 +153,7 @@ public class BackendServiceImpl {
                 labels.add(node.getName() + ":" + node.getId());
             }
         }
-        
+
         info.setValues(values);
         info.setLabels(labels);
 
@@ -179,31 +191,20 @@ public class BackendServiceImpl {
         }
         return result;
     }
-    
-    /*
-    this didn't wokr, always the the max number from svg, which is width 2801.0 height 1401.0
-     private static void testSvgSize(InputStream is) throws FileNotFoundException, IOException {
-        org.apache.batik.anim.dom.SAXSVGDocumentFactory factory = new org.apache.batik.anim.dom.SAXSVGDocumentFactory(
-                XMLResourceDescriptor.getXMLParserClassName());
 
 
-        org.w3c.dom.Document document = factory.createDocument(
-                "", is);
-        UserAgent agent = new UserAgentAdapter();
-        DocumentLoader loader = new DocumentLoader(agent);
-        BridgeContext context = new BridgeContext(agent, loader);
-        context.setDynamic(true);
-        GVTBuilder builder = new GVTBuilder();
-        GraphicsNode root = builder.build(context, document);
 
-        System.out.println("getGeometryBounds width " + root.getGeometryBounds().getWidth());
-        System.out.println("getGeometryBounds height " + root.getGeometryBounds().getHeight());
-        System.out.println("getSensitiveBounds width " + root.getSensitiveBounds().getWidth());
-        System.out.println("getSensitiveBounds height " + root.getSensitiveBounds().getHeight());        
-        System.out.println("getBounds width " + root.getBounds().getWidth());
-        System.out.println("getBounds height " + root.getBounds().getHeight());    
+    public static String getRunningInstancesFromKieServer(String containerId) throws URISyntaxException {
+        ProcessInstanceList instanceList = ServicesUtil.getKieService().getRunningInstances(containerId);
+        List<ProcessInstance> instances= instanceList.getProcessInstance();
+        int i = 0;
+        List<RunningInstance> result = new ArrayList<RunningInstance>();
+        for (ProcessInstance instance: instances){
+            i ++;
+            result.add(new RunningInstance(i, instance));
+        }
+        return gson.toJson(result);
+    }
 
-
-     }*/
-    
+ 
 }

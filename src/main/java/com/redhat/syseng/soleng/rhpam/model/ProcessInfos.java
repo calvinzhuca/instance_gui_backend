@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.redhat.syseng.soleng.rhpam.rest;
+package com.redhat.syseng.soleng.rhpam.model;
+
+import com.redhat.syseng.soleng.rhpam.model.ProcessInfo;
 
 /**
  *
