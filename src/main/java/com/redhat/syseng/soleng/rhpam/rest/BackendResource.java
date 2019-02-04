@@ -117,4 +117,13 @@ public class BackendResource {
         return Response.ok(result).build();
     }    
     
+    @GET
+    @Path("/migrations/{id}/results")
+    public Response pimServicesGetOneMigrationLogs(@PathParam("id") String id) throws IOException, URISyntaxException {
+        System.out.println("pimServicesGetOneMigrationLogs: " + id);
+        String result = PimServicesProxy.getOneMigrationLogs(id);
+        System.out.println("pimServicesGetOneMigrationLogs finished: " + result);
+        return Response.ok(result).build();
+    }     
+    
 }

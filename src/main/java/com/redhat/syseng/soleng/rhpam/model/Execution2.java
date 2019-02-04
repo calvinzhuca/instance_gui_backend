@@ -10,21 +10,29 @@ package com.redhat.syseng.soleng.rhpam.model;
  * @author czhu
  */
 public class Execution2 {
-   private String callback_url;
+   private String callbackUrl;
 
     private String type;
 
-    private String scheduled_start_time;
+    private String scheduledStartTime;
 
-    public String getCallback_url ()
-    {
-        return callback_url;
+    public String getCallbackUrl() {
+        return callbackUrl;
     }
 
-    public void setCallback_url (String callback_url)
-    {
-        this.callback_url = callback_url;
+    public void setCallbackUrl(String callbackUrl) {
+        this.callbackUrl = callbackUrl;
     }
+
+    public String getScheduledStartTime() {
+        return scheduledStartTime;
+    }
+
+    public void setScheduledStartTime(String scheduledStartTime) {
+        this.scheduledStartTime = scheduledStartTime;
+    }
+
+
 
     public String getType ()
     {
@@ -36,19 +44,11 @@ public class Execution2 {
         this.type = type;
     }
 
-    public String getScheduled_start_time ()
-    {
-        return scheduled_start_time;
-    }
 
-    public void setScheduled_start_time (String scheduled_start_time)
-    {
-        this.scheduled_start_time = scheduled_start_time;
-    }
 
     @Override
     public String toString()
     {
-        return "Execution [callback_url = "+callback_url+", type = "+type+", scheduled_start_time = "+scheduled_start_time+"]";
+        return "Execution [callbackUrl = "+callbackUrl+", type = "+type+", scheduledStartTime = "+scheduledStartTime+"]";
     }    
 }

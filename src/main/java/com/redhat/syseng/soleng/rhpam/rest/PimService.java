@@ -59,5 +59,11 @@ public interface PimService {
     @Produces({MediaType.APPLICATION_JSON})
     String getOneMigration(@PathParam("id") String id);
 
-                        
+    @GET
+    @Path("/migrations/{id}/results")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    String getOneMigrationLogs(@PathParam("id") String id);
+
+                                
 }

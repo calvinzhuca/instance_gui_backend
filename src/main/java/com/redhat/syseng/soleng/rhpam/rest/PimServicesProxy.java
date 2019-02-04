@@ -54,4 +54,11 @@ public class PimServicesProxy {
         if (result == null) result = "";
         return result;
     }    
+    
+    public static String getOneMigrationLogs(String id) throws URISyntaxException {
+        String result = ServicesUtil.getPimService().getOneMigrationLogs(id);
+        System.out.println("!!!!!!!!!!!!!!getOneMigration result: " + result);
+        if (result == null) result = "";
+        return result;
+    }     
 }

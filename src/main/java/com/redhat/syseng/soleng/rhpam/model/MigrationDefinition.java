@@ -12,7 +12,7 @@ import java.util.Arrays;
  * @author czhu
  */
 public class MigrationDefinition {
-   private Execution execution;
+   private Execution2 execution;
 
     private String planId;
 
@@ -29,12 +29,12 @@ public class MigrationDefinition {
         this.kieserverId = kieserverId;
     }
     
-    public Execution getExecution ()
+    public Execution2 getExecution ()
     {
         return execution;
     }
 
-    public void setExecution (Execution execution)
+    public void setExecution (Execution2 execution)
     {
         this.execution = execution;
     }
