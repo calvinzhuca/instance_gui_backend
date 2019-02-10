@@ -65,5 +65,17 @@ public interface PimService {
     @Produces({MediaType.APPLICATION_JSON})
     String getOneMigrationLogs(@PathParam("id") String id);
 
+    @DELETE
+    @Path("/migrations/{id}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    String deleteMigration(@PathParam("id") String id);
+
+    @PUT
+    @Path("/migrations/{id}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    String updateMigration(MigrationDefinition migration, @PathParam("id") String id);    
+    
                                 
 }

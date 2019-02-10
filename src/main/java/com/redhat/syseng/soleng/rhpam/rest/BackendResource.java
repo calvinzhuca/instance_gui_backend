@@ -126,4 +126,25 @@ public class BackendResource {
         return Response.ok(result).build();
     }     
     
+    
+    @DELETE
+    @Path("/migrations/{id}")
+    public Response pimServicesDeleteMigration(@PathParam("id") String id) throws IOException, URISyntaxException {
+        System.out.println("pimServicesDeleteMigration: " + id);
+        String result = PimServicesProxy.deleteMigration(id);
+        System.out.println("pimServicesDeleteMigration finished: " + result);
+        return Response.ok(result).build();
+    }    
+    
+    
+    @PUT
+    @Path("/migrations/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response pimServicesUpdateMigration(MigrationDefinition migration, @PathParam("id") String id) throws IOException, URISyntaxException {
+        System.out.println("pimServicesUpdateMigration id: " + id);
+        System.out.println("pimServicesUpdateMigration migration: " + migration);
+        String result = PimServicesProxy.updateMigration(migration, id);
+        System.out.println("pimServicesUpdatePlan finished: " + result);
+        return Response.ok("").build();
+    }    
 }

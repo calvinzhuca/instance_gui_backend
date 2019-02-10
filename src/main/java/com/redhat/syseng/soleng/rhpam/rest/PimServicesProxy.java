@@ -60,5 +60,15 @@ public class PimServicesProxy {
         System.out.println("!!!!!!!!!!!!!!getOneMigration result: " + result);
         if (result == null) result = "";
         return result;
+    }   
+    
+    public static String deleteMigration(String id) throws URISyntaxException {
+        String result = ServicesUtil.getPimService().deleteMigration(id);
+        return result;
     }     
+    
+    public static String updateMigration(MigrationDefinition migration, String id) throws URISyntaxException {
+         String result = ServicesUtil.getPimService().updateMigration(migration, id);
+        return result;
+    }        
 }
