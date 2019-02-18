@@ -73,11 +73,8 @@ public class BackendResource {
     @Path("/plans/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response pimServicesUpdatePlan(Plan plan, @PathParam("id") String id) throws IOException, URISyntaxException {
-        System.out.println("pimServicesUpdatePlan " + id);
-        System.out.println("pimServicesUpdatePlan " + plan);
         String result = PimServicesProxy.updatePlan(plan, id);
-        System.out.println("pimServicesUpdatePlan finished: " + result);
-        return Response.ok("").build();
+        return Response.ok(result).build();
     }
 
     @DELETE
