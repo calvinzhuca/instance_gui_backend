@@ -142,6 +142,6 @@ public class BackendResource {
         System.out.println("pimServicesUpdateMigration migration: " + migration);
         String result = PimServicesProxy.updateMigration(migration, id);
         System.out.println("pimServicesUpdatePlan finished: " + result);
-        return Response.ok("").build();
+        return Response.ok(result).build();
     }    
 }
