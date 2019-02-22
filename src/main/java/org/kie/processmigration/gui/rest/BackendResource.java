@@ -1,7 +1,7 @@
-package com.redhat.syseng.soleng.rhpam.rest;
+package org.kie.processmigration.gui.rest;
 
-import com.redhat.syseng.soleng.rhpam.model.MigrationDefinition;
-import com.redhat.syseng.soleng.rhpam.model.Plan;
+import org.kie.processmigration.gui.model.MigrationDefinition;
+import org.kie.processmigration.gui.model.Plan;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import javax.ws.rs.Consumes;
@@ -17,9 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/")
-//@Path("/")
-//@Produces(MediaType.APPLICATION_JSON)
-//@ApplicationScoped
 public class BackendResource {
 
     @GET
@@ -63,7 +60,8 @@ public class BackendResource {
     @Path("/plans")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response pimServicesCreatePlan(Plan plan) throws IOException, URISyntaxException {
-        System.out.println("pimServicesCreatePlan ");
+        System.out.println("!!!!!!!!!!!!!!!!!!!!pimServicesCreatePlan " + plan);
+        System.out.println("!!!!!!!!!!!!!!!!!!!!pimServicesCreatePlan mappings" + plan.getMappings());
         String result = PimServicesProxy.createPlan(plan);
         System.out.println("pimServicesCreatePlan finished: " + result);
         return Response.ok(result).build();

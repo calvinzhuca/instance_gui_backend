@@ -1,7 +1,7 @@
+package org.kie.processmigration.gui.rest;
 
-package com.redhat.syseng.soleng.rhpam.rest;
-import com.redhat.syseng.soleng.rhpam.model.MigrationDefinition;
-import com.redhat.syseng.soleng.rhpam.model.Plan;
+import org.kie.processmigration.gui.model.MigrationDefinition;
+import org.kie.processmigration.gui.model.Plan;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;

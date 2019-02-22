@@ -1,13 +1,13 @@
-package com.redhat.syseng.soleng.rhpam.rest;
+package org.kie.processmigration.gui.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import com.redhat.syseng.soleng.rhpam.model.ProcessInfos;
-import com.redhat.syseng.soleng.rhpam.model.ProcessInfo;
-import com.redhat.syseng.soleng.rhpam.model.ProcessInstanceList;
-import com.redhat.syseng.soleng.rhpam.model.ProcessInstanceList.ProcessInstance;
-import com.redhat.syseng.soleng.rhpam.model.RunningInstance;
+import org.kie.processmigration.gui.model.ProcessInfos;
+import org.kie.processmigration.gui.model.ProcessInfo;
+import org.kie.processmigration.gui.model.ProcessInstanceList;
+import org.kie.processmigration.gui.model.ProcessInstanceList.ProcessInstance;
+import org.kie.processmigration.gui.model.RunningInstance;
 
 import java.io.File;
 

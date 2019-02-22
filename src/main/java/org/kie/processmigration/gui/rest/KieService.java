@@ -1,6 +1,6 @@
+package org.kie.processmigration.gui.rest;
 
-package com.redhat.syseng.soleng.rhpam.rest;
-import com.redhat.syseng.soleng.rhpam.model.ProcessInstanceList;
+import org.kie.processmigration.gui.model.ProcessInstanceList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

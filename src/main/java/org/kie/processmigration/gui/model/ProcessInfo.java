@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.redhat.syseng.soleng.rhpam.model;
+package org.kie.processmigration.gui.model;
 
-import com.redhat.syseng.soleng.rhpam.rest.BpmNode;
+import org.kie.processmigration.gui.rest.BpmNode;
 import java.util.ArrayList;
 
-/**
- *
- * @author czhu
- */
 public class ProcessInfo {
 
     private ArrayList<BpmNode> nodes;

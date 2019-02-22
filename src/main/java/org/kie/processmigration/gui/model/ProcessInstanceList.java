@@ -6,7 +6,7 @@
 //
 
 
-package com.redhat.syseng.soleng.rhpam.model;
+package org.kie.processmigration.gui.model;
 
 import java.util.ArrayList;
 import java.util.List;

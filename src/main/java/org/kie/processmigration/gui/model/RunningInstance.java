@@ -1,15 +1,11 @@
 
-package com.redhat.syseng.soleng.rhpam.model;
+package org.kie.processmigration.gui.model;
 
 import java.util.Date;
-import com.redhat.syseng.soleng.rhpam.model.ProcessInstanceList.ProcessInstance;
+import org.kie.processmigration.gui.model.ProcessInstanceList.ProcessInstance;
 import java.text.SimpleDateFormat;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-/**
- *
- * @author czhu
- */
 public class RunningInstance {
     private int id;
     private byte processInstanceId;
